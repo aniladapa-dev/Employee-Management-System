@@ -1,0 +1,41 @@
+# IDE and Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*.iml
+*.iws
+*.ipr
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+backend.log
+frontend.log
+
+# Temporary/Scratch Files
+HashGen.java
+check_pass.py
+dummy_hash.txt
+full_error.log
+test_salary*.sh
+verify_profile.sh
+project_output.log
+build.log
+spring_boot.log
+
+# Local Environment
+.env.local
+.env.*.local
+
+# Dependency related
+node_modules/
+target/
+dist/
+dist-ssr/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
