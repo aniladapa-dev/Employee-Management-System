@@ -13,7 +13,7 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 
-@CrossOrigin("*")
+//@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/leaves")
 @AllArgsConstructor

@@ -27,4 +27,5 @@ public class AnnouncementController {
     public ResponseEntity<List<AnnouncementDto>> getAllAnnouncements() {
         return ResponseEntity.ok(announcementService.getAllAnnouncements());
     }
+    
 }
