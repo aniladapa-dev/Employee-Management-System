@@ -36,9 +36,7 @@ public class AuthController {
         JwtAuthResponse jwtAuthResponse = authService.login(loginDto);
         return new ResponseEntity<>(ApiResponse.success("Login Successful", jwtAuthResponse), HttpStatus.OK);
     }
-UPDATE users 
-SET password = '$2a$10$7QJ9X9V1qF0uP1X6Y1gZP.9y4W6zW5J1c3s1K8pP5rX1Qy9Q2zY5a'
-WHERE username = 'admin';
+
     // Change Password - accessible to all logged-in users
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'TEAM_LEADER', 'EMPLOYEE')")
     @PostMapping("/change-password")
