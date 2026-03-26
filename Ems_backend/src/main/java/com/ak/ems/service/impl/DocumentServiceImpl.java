@@ -46,6 +46,7 @@ public class DocumentServiceImpl implements DocumentService {
             document.setFileName(file.getOriginalFilename());
             document.setFileType(file.getContentType());
             document.setFileUrl(fileUrl);
+            document.setFilePath(fileUrl); // satisfy file_path column
             document.setUploadedAt(LocalDateTime.now());
 
             Document saved = documentRepository.save(document);
