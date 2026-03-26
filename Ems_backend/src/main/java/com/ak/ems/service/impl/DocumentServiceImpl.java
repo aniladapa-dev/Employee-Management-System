@@ -15,16 +15,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 @RequiredArgsConstructor
 public class DocumentServiceImpl implements DocumentService {
 
+    private static final Logger logger = LoggerFactory.getLogger(DocumentServiceImpl.class);
     private final DocumentRepository documentRepository;
     private final Cloudinary cloudinary;
 
     @Override
     public DocumentDto uploadDocument(Long employeeId, MultipartFile file) {
         try {
+            logger.info("Attempting to upload file: {} for employeeId: {}", file.getOriginalFilename(), employeeId);
+            
             // Upload to Cloudinary
             Map uploadResult = cloudinary.uploader().upload(
                     file.getBytes(),
@@ -32,6 +38,7 @@ public class DocumentServiceImpl implements DocumentService {
             );
 
             String fileUrl = uploadResult.get("secure_url").toString();
+            logger.info("Cloudinary upload successful. URL: {}", fileUrl);
 
             // Save metadata in DB
             Document document = new Document();
@@ -42,11 +49,11 @@ public class DocumentServiceImpl implements DocumentService {
             document.setUploadedAt(LocalDateTime.now());
 
             Document saved = documentRepository.save(document);
-
             return mapToDto(saved);
 
         } catch (Exception e) {
-            throw new RuntimeException("Cloudinary upload failed: " + e.getMessage());
+            logger.error("Cloudinary upload failed for employeeId: {}. Error: {}", employeeId, e.getMessage(), e);
+            throw new RuntimeException("Cloudinary upload failed: " + e.getMessage() + ". Check Render logs for full stack trace.");
         }
     }
 
