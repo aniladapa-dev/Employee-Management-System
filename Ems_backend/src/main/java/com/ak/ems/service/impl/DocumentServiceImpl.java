@@ -30,15 +30,13 @@ public class DocumentServiceImpl implements DocumentService {
     public DocumentDto uploadDocument(Long employeeId, MultipartFile file) {
         try {
             logger.info("Attempting to upload file: {} for employeeId: {}", file.getOriginalFilename(), employeeId);
-            
+
             // Upload to Cloudinary
             Map uploadResult = cloudinary.uploader().upload(
                     file.getBytes(),
                     ObjectUtils.asMap(
                             "resource_type", "auto",
-                            "access_mode", "public"
-                    )
-            );
+                            "access_mode", "public"));
 
             String fileUrl = uploadResult.get("secure_url").toString();
             logger.info("Cloudinary upload successful. URL: {}", fileUrl);
@@ -49,9 +47,22 @@ public class DocumentServiceImpl implements DocumentService {
             document.setFileName(file.getOriginalFilename());
             document.setFileType(file.getContentType());
             document.setFileUrl(fileUrl);
-            document.setFilePath(fileUrl); 
+            document.setFilePath(fileUrl);
             document.setPublicId(uploadResult.get("public_id").toString());
             document.setResourceType(uploadResult.get("resource_type").toString());
+            
+            // Defensively get format
+            String format = null;
+            if (uploadResult.containsKey("format") && uploadResult.get("format") != null) {
+                format = uploadResult.get("format").toString();
+            } else {
+                // Fallback: Extract from secure_url (e.g., ".../abc.pdf")
+                if (fileUrl.contains(".")) {
+                    format = fileUrl.substring(fileUrl.lastIndexOf(".") + 1);
+                    logger.info("Format not in result, extracted from URL: {}", format);
+                }
+            }
+            document.setFormat(format);
             document.setUploadedAt(LocalDateTime.now());
 
             Document saved = documentRepository.save(document);
@@ -59,7 +70,8 @@ public class DocumentServiceImpl implements DocumentService {
 
         } catch (Exception e) {
             logger.error("Cloudinary upload failed for employeeId: {}. Error: {}", employeeId, e.getMessage(), e);
-            throw new RuntimeException("Cloudinary upload failed: " + e.getMessage() + ". Check Render logs for full stack trace.");
+            throw new RuntimeException(
+                    "Cloudinary upload failed: " + e.getMessage() + ". Check Render logs for full stack trace.");
         }
     }
 
@@ -79,7 +91,7 @@ public class DocumentServiceImpl implements DocumentService {
         return mapToDto(document);
     }
 
-    //  Mapper
+    // Mapper
     private DocumentDto mapToDto(Document document) {
         return new DocumentDto(
                 document.getId(),
@@ -87,8 +99,7 @@ public class DocumentServiceImpl implements DocumentService {
                 document.getFileName(),
                 document.getFileType(),
                 document.getFileUrl(),
-                document.getUploadedAt()
-        );
+                document.getUploadedAt());
     }
 
     @Override
@@ -98,13 +109,25 @@ public class DocumentServiceImpl implements DocumentService {
 
         if (document.getPublicId() != null && document.getResourceType() != null) {
             // Generate a signed URL for secure access
-            return cloudinary.url()
+            // Corrected: Include the format (extension) in the public ID if available
+            String publicIdWithFormat = document.getPublicId();
+            if (document.getFormat() != null && !document.getFormat().isEmpty()) {
+                // Only append if it's not already there (raw resources include it in publicId)
+                if (!publicIdWithFormat.endsWith("." + document.getFormat())) {
+                    publicIdWithFormat += "." + document.getFormat();
+                }
+            }
+
+            String signedUrl = cloudinary.url()
                     .resourceType(document.getResourceType())
                     .secure(true)
                     .signed(true)
-                    .generate(document.getPublicId());
+                    .generate(publicIdWithFormat);
+            
+            logger.info("Generated Signed Download URL: {}", signedUrl);
+            return signedUrl;
         }
 
-        return document.getFileUrl(); 
+        return document.getFileUrl();
     }
 }

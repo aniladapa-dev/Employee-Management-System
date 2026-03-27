@@ -31,6 +31,7 @@ public class Document {
 
     private String publicId;
     private String resourceType;
+    private String format;
 
     private LocalDateTime uploadedAt = LocalDateTime.now();
 }
