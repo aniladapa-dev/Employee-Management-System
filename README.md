@@ -70,7 +70,7 @@ To explore the application, you can use the following demo credentials:
 - **Username:** admin  
 - **Password:** admin123  
 
-> ⚠️ Note: This is a demo account with limited permissions, created for evaluation purposes.
+> ⚠️ Note: This is a demo account created for evaluation purposes.
 
 ---
 
