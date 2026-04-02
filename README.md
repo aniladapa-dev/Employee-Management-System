@@ -61,5 +61,19 @@ graph TD
 - **Service Layer**: Contains the core business logic, including salary calculations, attendance processing, and Cloudinary file handling.
 - **Persistence Layer**: **Spring Data JPA** manages the database interactions with MySQL, ensuring data integrity and version control via Hibernate.
 ---
+---
+
+## 🔑 Demo Access
+
+To explore the application, you can use the following demo credentials:
+
+- **Username:** admin  
+- **Password:** admin123  
+
+> ⚠️ Note: This is a demo account with limited permissions, created for evaluation purposes.
+
+---
 
 *Developed by Anil Kumar Adapa - 2026*
+
+
