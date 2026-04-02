@@ -61,7 +61,7 @@ graph TD
 - **Service Layer**: Contains the core business logic, including salary calculations, attendance processing, and Cloudinary file handling.
 - **Persistence Layer**: **Spring Data JPA** manages the database interactions with MySQL, ensuring data integrity and version control via Hibernate.
 ---
----
+
 
 ## 🔑 Demo Access
 
