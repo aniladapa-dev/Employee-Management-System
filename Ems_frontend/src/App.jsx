@@ -14,6 +14,7 @@ import SalaryComponent from './components/SalaryComponent';
 import ProfileComponent from './components/ProfileComponent';
 import AnnouncementComponent from './components/AnnouncementComponent';
 import ReportComponent from './components/ReportComponent';
+import ChatComponent from './components/ChatComponent';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import { DashboardLayout } from './components/layout/DashboardLayout';
 import { isUserLoggedIn } from './services/auth/AuthService';
@@ -53,6 +54,7 @@ function App() {
                   <Route path='/profile/:employeeId' element={<ProfileComponent />} />
                   <Route path='/announcements' element={<AnnouncementComponent />} />
                   <Route path='/reports' element={<ReportComponent />} />
+                  <Route path='/chat' element={<ChatComponent />} />
                 </Routes>
               </DashboardLayout>
             </AuthenticatedRoute>

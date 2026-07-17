@@ -43,7 +43,7 @@ public class EmployeeController {
         return ResponseEntity.ok(ApiResponse.success("Employee fetched successfully", employeeDto));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'TEAM_LEADER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'TEAM_LEADER', 'EMPLOYEE')")
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<EmployeeDto>>> getAllEmployees(
             @RequestParam(value = "query", required = false) String query,

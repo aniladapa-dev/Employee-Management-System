@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { loginUser, saveLoggedInUser, storeToken } from '../../services/auth/AuthService';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
-import { Lock, User, LogIn } from 'lucide-react'
+import { Lock, User, LogIn, Eye, EyeOff } from 'lucide-react'
 
 const LoginComponent = () => {
     const [usernameOrEmail, setUsernameOrEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -27,14 +28,17 @@ const LoginComponent = () => {
             Swal.fire('Login Failed', (error.response?.data?.message || 'Invalid credentials. Please check your username and password.'), 'error');
         }
     }
-
     return (
-        <div className="min-h-screen bg-slate-950 flex">
+        <div className="min-h-screen bg-slate-950 flex relative overflow-hidden">
+            {/* Background Glows for the entire page */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-500/5 rounded-full blur-3xl pointer-events-none z-0" />
+            <div className="absolute bottom-0 left-1/3 w-[600px] h-[600px] bg-primary-950/20 rounded-full blur-3xl pointer-events-none z-0" />
+
             {/* Left - Branding Panel */}
             <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-primary-700 to-primary-950 flex-col justify-between p-12 relative overflow-hidden">
                 {/* Background decorative blobs */}
-                <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-400/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
+                <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 z-0" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-400/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2 z-0" />
 
                 {/* Logo */}
                 <div className="relative z-10">
@@ -75,8 +79,11 @@ const LoginComponent = () => {
             </div>
 
             {/* Right - Login Form */}
-            <div className="flex-1 flex items-center justify-center p-8">
-                <div className="w-full max-w-md space-y-8">
+            <div className="flex-1 flex items-center justify-center p-8 relative bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80')" }}>
+                {/* Dark overlay to ensure contrast and readability of form elements */}
+                <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px] z-0" />
+
+                <div className="w-full max-w-md space-y-8 relative z-10">
                     {/* Mobile Logo */}
                     <div className="lg:hidden flex items-center gap-3 mb-6">
                         <div className="w-9 h-9 rounded-xl bg-primary-600 flex items-center justify-center text-white font-black">E</div>
@@ -109,13 +116,20 @@ const LoginComponent = () => {
                             <div className="relative">
                                 <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                                 <input
-                                    type="password"
+                                    type={showPassword ? 'text' : 'password'}
                                     placeholder="••••••••••"
-                                    className="w-full pl-11 pr-4 py-3.5 bg-slate-800 border border-slate-700 text-white rounded-xl outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition-all font-medium placeholder:text-slate-600"
+                                    className="w-full pl-11 pr-12 py-3.5 bg-slate-800 border border-slate-700 text-white rounded-xl outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition-all font-medium placeholder:text-slate-600"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                 />
+                                <button
+                                    type="button"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                </button>
                             </div>
                         </div>
 

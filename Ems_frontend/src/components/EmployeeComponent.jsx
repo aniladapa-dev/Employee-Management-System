@@ -16,7 +16,9 @@ import {
   ChevronLeft,
   Wrench,
   Building2,
-  Users as UsersIcon
+  Users as UsersIcon,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
 import { Button } from './ui/Button';
@@ -40,6 +42,7 @@ const EmployeeComponent = () => {
   const [teams, setTeams] = useState([])
   const [skills, setSkills] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const navigator = useNavigate()
   const {id} = useParams()
@@ -373,13 +376,22 @@ const EmployeeComponent = () => {
               </InputGroup>
 
               <InputGroup label="Password" icon={Lock} error={errors.password}>
-                <input 
-                  type="password"
-                  placeholder="••••••••"
-                  className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border ${errors.password ? 'border-red-300 ring-4 ring-red-500/10' : 'border-slate-200 dark:border-slate-800'} rounded-xl outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all font-medium`}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <div className="relative">
+                  <input 
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    className={`w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-950 border ${errors.password ? 'border-red-300 ring-4 ring-red-500/10' : 'border-slate-200 dark:border-slate-800'} rounded-xl outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all font-medium`}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </InputGroup>
             </CardContent>
           </Card>

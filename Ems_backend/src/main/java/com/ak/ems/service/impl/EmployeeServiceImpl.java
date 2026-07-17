@@ -10,6 +10,7 @@ import com.ak.ems.repository.TeamRepository;
 import com.ak.ems.repository.RoleRepository;
 import com.ak.ems.repository.UserRepository;
 import com.ak.ems.service.EmployeeService;
+import com.ak.ems.service.EmailService;
 import com.ak.ems.entity.User;
 import com.ak.ems.entity.Role;
 import com.ak.ems.entity.Department;
@@ -49,6 +50,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private com.ak.ems.repository.DocumentRepository documentRepository;
     private com.ak.ems.repository.AnnouncementRepository announcementRepository;
     private PasswordEncoder passwordEncoder;
+    private EmailService emailService;
 
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
@@ -139,6 +141,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         Employee savedEmployee = employeeRepository.save(employee);
+
+        // Send credentials email if user was created inline
+        if (employeeDto.getUsername() != null && !employeeDto.getUsername().isEmpty() &&
+            employeeDto.getPassword() != null && !employeeDto.getPassword().isEmpty()) {
+            emailService.sendCredentialsEmail(
+                savedEmployee.getEmail(),
+                savedEmployee.getFirstName() + " " + savedEmployee.getLastName(),
+                employeeDto.getUsername(),
+                employeeDto.getPassword()
+            );
+        }
 
         // Link back to Department or Team for leadership roles
         if ("ROLE_MANAGER".equals(employeeDto.getRole()) && employee.getDepartment() != null) {

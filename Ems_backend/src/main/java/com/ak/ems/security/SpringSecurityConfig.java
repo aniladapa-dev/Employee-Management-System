@@ -50,6 +50,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests((authorize) -> {
                     // Public Endpoints
                     authorize.requestMatchers("/api/auth/**").permitAll();
+                    authorize.requestMatchers("/ws/**").permitAll();
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     // Swagger Public Endpoints
                     authorize.requestMatchers("/swagger-ui/**").permitAll();
@@ -78,6 +79,7 @@ public class SpringSecurityConfig {
 
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:5173", // Vite local
+                "http://localhost:3000", // React local (port 3000)
                 frontendUrl // dynamic frontend URL
         ));
 

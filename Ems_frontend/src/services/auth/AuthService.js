@@ -8,8 +8,8 @@ export const loginUser = (loginDto) =>
     apiClient.post("/auth/login", loginDto);
 export const changePassword = (oldPassword, newPassword) => apiClient.post("/auth/change-password", { oldPassword, newPassword });
 
-export const storeToken = (token) => localStorage.setItem("token", token);
-export const getToken = () => localStorage.getItem("token");
+export const storeToken = (token) => sessionStorage.setItem("token", token);
+export const getToken = () => sessionStorage.getItem("token");
 export const saveLoggedInUser = (username, role) => {
     sessionStorage.setItem("authenticatedUser", username);
     sessionStorage.setItem("role", role);
